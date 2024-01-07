@@ -36,7 +36,7 @@
 						<username>mustak42</username>
 						<password>ReadDocDoCert@2</password>
 						<applicationName>Git-App-Mus</applicationName>
-						<environment>SANDBOX</environment>
+						<environment>Sandbox</environment>
 						<workerType>MICRO</workerType>
 						<region>us-east-2</region>
 						<workers>1</workers>
