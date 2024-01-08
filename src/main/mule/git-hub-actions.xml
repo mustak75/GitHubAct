@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="098f483e-2e8f-4c41-b671-3cb0b04f3eaa" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="ab0b1e93-1710-4c11-b9e4-6bfb859e2fef" file="secure.yaml" key="${secure.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
 	<flow name="git-hub-actionsFlow" doc:id="1980e457-d45f-42a1-bb6c-3bf7b5c3836c" >
 		<http:listener doc:name="/git" doc:id="0a13c0a2-dc48-4403-ba16-0fbdbdcfbbcd" config-ref="HTTP_Listener_config" path="/git"/>
-		<set-payload value="Hello Work Flow" doc:name="Hello Work Flow" doc:id="163f105e-3303-4a9d-8543-11b5c4c87da0" />
+		<set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	&quot;message&quot;: p('secure::encrypted.property')&#10;}]" doc:name="payload" doc:id="163f105e-3303-4a9d-8543-11b5c4c87da0" />
 		<logger level="INFO" doc:name="Logger" doc:id="ec06dfd0-262c-44d1-99ff-b1046387705d" message="git action complete"/>
 	</flow>
 </mule>
